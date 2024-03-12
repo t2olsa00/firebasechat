@@ -4,13 +4,14 @@ import { useEffect, useState, useRef } from 'react';
 import { query, onSnapshot, orderBy } from 'firebase/firestore';
 import Constants from 'expo-constants';
 import { convertFirebaseTimestampToJS } from './helpers/Functions';
+import Login from './Login';
 
 export default function App() {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
+  const [logged, setLogged] = useState(false)
   const scrollViewRef = useRef();
-
-const MESSAGES = 'messages';
+  const MESSAGES = 'messages';
 
 useEffect(() => {
   const q = query(collection(firestore, MESSAGES),orderBy('created','desc'));
@@ -42,6 +43,7 @@ useEffect(() => {
     console.log('Message saved.')
   }
 
+  if (logged) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView ref={scrollViewRef} style={styles.scrollView}>
@@ -63,7 +65,9 @@ useEffect(() => {
       </View>
     </SafeAreaView>
   )
-  
+} else {
+  return <Login setLogin={setLogged} />
+}
 }
 
 const styles = StyleSheet.create({
